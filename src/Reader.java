@@ -14,7 +14,7 @@ public class Reader extends Thread{
         while (true) {
             try {
                 sleep(100);
-                if (ss.getDis().available() > 0){
+                if (ss.getDataOutputStream().available() > 0){
                     String data = ss.read();
                     System.out.println(data);
                     ss.write(data.toUpperCase());

@@ -29,23 +29,15 @@ public class SimpleServer {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
-        // Wait and accept a connection
-
     }
 
     public static void main(String args[]) throws IOException {
-
         SimpleServer ss = new SimpleServer();
+        // start thread to listen for input
         Reader reader = new Reader(ss);
         reader.start();
+        // use main thread to listen on console for messages to send
         ss.startWriter();
-//        ss.write("Hi there!");
-//        System.out.println(ss.read());
-//        ss.write("Please input the string for uppercase conversion...");
-//        String msg = ss.read();
-//        ss.write(msg.toUpperCase());
     }
 
     // Send a string!
@@ -53,6 +45,7 @@ public class SimpleServer {
         try {
             dos.writeUTF(data);
         } catch (IOException e) {
+            close();
             throw new RuntimeException(e);
         }
     }
@@ -62,6 +55,7 @@ public class SimpleServer {
             String st = new String (dis.readUTF());
             return st;
         } catch (IOException e) {
+            close();
             throw new RuntimeException(e);
         }
     }
@@ -70,6 +64,10 @@ public class SimpleServer {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNext()){
             String line = scanner.nextLine();
+            if(line.equals("quit") || line.equals("q")){
+                close();
+                System.exit(0);
+            }
             write(line);
         }
     }
@@ -84,51 +82,7 @@ public class SimpleServer {
         }
     }
 
-    public ServerSocket getS() {
-        return s;
-    }
-
-    public void setS(ServerSocket s) {
-        this.s = s;
-    }
-
-    public Socket getSock() {
-        return sock;
-    }
-
-    public void setSock(Socket sock) {
-        this.sock = sock;
-    }
-
-    public OutputStream getOs() {
-        return os;
-    }
-
-    public void setOs(OutputStream os) {
-        this.os = os;
-    }
-
-    public DataOutputStream getDos() {
-        return dos;
-    }
-
-    public void setDos(DataOutputStream dos) {
-        this.dos = dos;
-    }
-
-    public InputStream getIs() {
-        return is;
-    }
-
-    public void setIs(InputStream is) {
-        this.is = is;
-    }
-
-    public DataInputStream getDis() {
+    public DataInputStream getDataOutputStream() {
         return dis;
-    }
-
-    public void setDis(DataInputStream dis) {
-        this.dis = dis;
     }
 }
